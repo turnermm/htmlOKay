@@ -1,0 +1,6 @@
+/*  htmlaccess htmlOK */
+
+#htmlOK_div {}
+#htmlOK_div a:link { color: __text__; text-decoration: underline; }
+#htmlOK td.bar { background-color: __background_alt__; }
+
