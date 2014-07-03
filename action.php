@@ -20,16 +20,6 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     var $do_dbg = false;
     var $access_scope;
 
-    function getInfo()
-    {
-        return array('author' => 'Myron Turner',
-            'email' => 'mturner@cc.umanitoba.ca',
-            'date' => '2007-04-21',
-            'name' => 'htmlOKay Plugin',
-            'desc' => 'html access control ',
-            'url' => 'http://mturner.org/htmlOK/'
-            );
-    }
 
     function register(&$controller)
     {

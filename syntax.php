@@ -83,19 +83,6 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
           
     }
 
-    /**
-    * return some info
-    */
-    function getInfo()
-    {
-        return array('author' => 'Myron Turner',
-            'email' => 'mturner@cc.umanitoba.ca',
-            'date' => '2007-04-21',
-            'name' => 'htmlOKay Plugin',
-            'desc' => 'html access control ',
-            'url' => 'http://mturner.org/htmlOK/'
-            );
-    }
 
     /**
     * What kind of syntax are we?
@@ -422,7 +409,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
         $this->pos = $pos;
         if (!$conf['htmlok'])
         {
-            $match = ereg_replace ('<', '&lt;', $match) . '<br />';
+            $match = preg_replace ('/</', '&lt;', $match) . '<br />';
             return array($state, $match);
         }
         elseif($this->JS_ErrString) {
@@ -537,7 +524,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
 
         if (is_string($problem_str))
         {
-            $error_string .= compact_string(ereg_replace ('<', '&lt;', $match)) . '<br />';
+            $error_string .= compact_string(preg_replace ('/</', '&lt;', $match)) . '<br />';
             $problem_str = htmlspecialchars ($problem_str, ENT_QUOTES);
         }
 
