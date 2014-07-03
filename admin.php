@@ -54,19 +54,7 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
         $this->traverseDirTree($this->path, 'outputpath', 'outputpath');
     }
 
-    /**
-    * return some info
-    */
-    function getInfo()
-    {
-        return array('author' => 'Myron Turner',
-            'email' => 'Myron_Turner@shaw.ca',
-            'date' => '2007-04-10',
-            'name' => 'HTML Access Manager',
-            'desc' => 'sets permissions for html write/edit access',
-            'url' => 'http://www.mturner.org/htmlaccess/',
-            );
-    }
+
 
     /**
     * return sort order for position in admin menu

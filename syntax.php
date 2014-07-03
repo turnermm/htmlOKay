@@ -83,19 +83,6 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
           
     }
 
-    /**
-    * return some info
-    */
-    function getInfo()
-    {
-        return array('author' => 'Myron Turner',
-            'email' => 'mturner@cc.umanitoba.ca',
-            'date' => '2007-04-21',
-            'name' => 'htmlOKay Plugin',
-            'desc' => 'html access control ',
-            'url' => 'http://mturner.org/htmlOK/'
-            );
-    }
 
     /**
     * What kind of syntax are we?
