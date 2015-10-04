@@ -4,5 +4,6 @@ email  turnermm02@shaw.ca
 date  2015-09-03
 name  htmlOKay
 desc  Restricts HTML access to designated users and groups at one of four access levels.
-url  https://www.dokuwiki.org/doku.php?id=plugin:htmlokay
+url  https://www.dokuwiki.org/plugin:htmlokay
+
 
