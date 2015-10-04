@@ -25,6 +25,9 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     {
         $controller->register_hook('HTMLOK_ACCESS_EVENT', 'BEFORE', $this, 'get_permission');
         $controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this, 'bypasss_cache');
+        $controller->register_hook('TEMPLATE_USERTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('user'));    
+       $controller->register_hook('TEMPLATE_HTMLOKAYTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('ok'));
+        
     }
 
     function bypasss_cache(&$event, $param)
@@ -75,6 +78,24 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         }
     }
 
+   function action_link(&$event, $param)
+    {
+          global $INFO;
+         // if($INFO['client']) {  
+         if($INFO['htmlOK_client'] && $INFO['hmtlOK_access_level'] > 0) {
+              $name = "HTML Error Window";
+              if($param[0] == 'ok') {
+                  $htm_open = '<span>';
+                  $htm_close = '</span>';
+              }
+              else {
+                  $htm_open = '<li>';
+                  $htm_close = '</li>';
+              }           
+              $event->data['items']['htmlokay'] = $htm_open .'<a href="javascript: htmlOK_ERRORS(0);jQuery(\'#htmlOKDBG_ERRORWIN\').toggle();void(0);"  rel="nofollow"   title="' .$name. '">'. $name.'</a>' . $htm_close;
+          }         
+  
+    }
     /**
     * This function first checks to see whether the current namespace has a an access file
     *        if not, it goes back, one directory at a time, and tests whether an access file exists for that namespace
@@ -337,6 +358,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
              }
 
              dom.innerHTML = str;
+             if(!viz) return;
              dom.style.display=viz;
        }
        function show_htmlOKay_ERRORSLINK() {
@@ -350,10 +372,10 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 
       //--><!]]></script>
 
-      <span id="htmlOKDBG_ERRORWINLINK"  style="display:none;">
+      <div id="htmlOKDBG_ERRORWINLINK"  style="display:none; padding-top:2em;">
       <a href="javascript:htmlOK_ERRORS('block');">show errors</a>&nbsp;&nbsp;
       <a href="javascript:htmlOK_ERRORS('none');">close errors</a>
-      </span>
+      </div>
 
       <div id="htmlOKDBG_ERRORWIN" style="display:none; padding:1em; background-color:white;"></div>
 
