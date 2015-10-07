@@ -585,7 +585,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     }
 
     /**
-    * Constructs the Javascript Error String for outut in the Errors window
+    * Constructs the Javascript Error String for output in the Errors window
     */
     function get_JSErrString($msg)
     {

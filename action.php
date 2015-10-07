@@ -19,7 +19,8 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     var $db_msg = "";
     var $do_dbg = false;
     var $access_scope;
-
+    var $access_file;
+    var $namespace;
 
     function register(&$controller)
     {
@@ -27,6 +28,23 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this, 'bypasss_cache');
         $controller->register_hook('TEMPLATE_USERTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('user'));    
        $controller->register_hook('TEMPLATE_HTMLOKAYTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('ok'));
+        $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'modify_headers', array());   
+    }
+
+   function modify_headers(&$event, $param) {
+        global $INFO, $ID;
+   
+        $this->get_permission(); 
+        $page = noNS($ID) . '.txt';
+        $files = "\nfiles: " . print_r($this->files,1);
+        if(!$this->files) {    
+            return;
+        }
+        if(!in_array('all', $this->files) && !in_array($page, $this->files)) {  
+              return;
+        }
+        $event->data[] = 'Last-Modified: Tue, 15 Nov 1994 12:45:26 GMT';
+        $event->data[] =  'Cache-control: no-cache,must-revalidate,no-store';
         
     }
 
@@ -57,6 +75,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
             $namespace = '_ROOT_';
         }
 
+        $this->namespace = $namespace;
         $namespace = str_replace(':', '#', $namespace);
         $access_file = $this->get_access_file(HTMLOK_ACCESS_DIR, $namespace);
         $this->set_dbg_msg("access file: $access_file");
