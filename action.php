@@ -15,7 +15,6 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     var $users;
     var $groups;
     var $display;
-    var $action_event;
     var $INFO_Writable;
     var $db_msg = "";
     var $do_dbg = false;
@@ -36,8 +35,10 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     }
 
      function act_before(&$event, $param) {
+         global $INPUT;
          $act = act_clean($event->data);         
-         if($act == 'admin') {
+         $page = $INPUT->str('page');
+         if($act == 'admin' && $page) {          
             $ftm = filemtime (CONFIG_FILE);        
             setcookie('act_time', $ftm , null,DOKU_BASE);
          }
@@ -80,7 +81,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
             $event->stopPropagation();
             $event->result = false;
         }
-        $this->action_event = $event;
+      
     }
 
     function get_info()
