@@ -36,7 +36,8 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     var $closed_div = 0;
     var $divs_reported = false;
     var $JS_ErrString = "";
-    function syntax_plugin_htmlOKay()
+    
+    function __construct()
     {
         global $INFO;
         global $ID;
@@ -119,10 +120,6 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
         $this->cycle++;
   
         $this->Lexer->addEntryPattern('<html>(?=.*?</html>)', $mode, 'plugin_htmlOKay');
-    }
-
-    function postConnect()
-    {
         $this->Lexer->addPattern('.<(?i)IFRAME.*?/IFRAME\s*>', 'plugin_htmlOKay');
         $this->Lexer->addPattern('.<(?i)ILAYER.*?/ILAYER\s*>', 'plugin_htmlOKay');
         $this->Lexer->addPattern('<(?i)a.*?javascript.*?</a\s*>', 'plugin_htmlOKay');
@@ -135,7 +132,10 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
 
         $this->Lexer->addPattern('(?i)ID\s*=\s*\W?.*?\W', 'plugin_htmlOKay');
         $this->Lexer->addPattern('(?i)class\s*=\s*\W?.*?\W', 'plugin_htmlOKay');
+      }   
 
+    function postConnect()
+    {
         $this->Lexer->addExitPattern('</html>', 'plugin_htmlOKay');
     }
 

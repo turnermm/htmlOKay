@@ -4,6 +4,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN . 'action.php');
 if (!defined('HTMLOK_ACCESS_DIR')) define('HTMLOK_ACCESS_DIR', realpath(dirname(__FILE__)) . '/conf/access');
+define ('CONFIG_FILE', DOKU_INC . 'conf/local.php');
 require_once(DOKU_INC . 'inc/cache.php');
 // ini_set('error_reporting', E_ALL);
 // ini_set('display_errors', "on");
@@ -29,14 +30,35 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $controller->register_hook('TEMPLATE_USERTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('user'));    
        $controller->register_hook('TEMPLATE_HTMLOKAYTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('ok'));
         $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'modify_headers', array());   
+        $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'dw_started', array());   
+        $controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this, 'act_before', array());   
+               
     }
 
+     function act_before(&$event, $param) {
+         $act = act_clean($event->data);         
+         if($act == 'admin') {
+            $ftm = filemtime (CONFIG_FILE);        
+            setcookie('act_time', $ftm , null,DOKU_BASE);
+         }
+         else  setcookie('act_time', $ftm , time() -3600,DOKU_BASE);
+     }
+
+     function dw_started(&$event, $param) {
+        $act = act_clean($event->data);
+        if($_COOKIE["act_time"]) {
+                touch(CONFIG_FILE, $_COOKIE["act_time"] -20);    
+                setcookie('act_time', $_COOKIE["act_time"] , time() -3600,DOKU_BASE);
+        }
+     }
+     
+    
    function modify_headers(&$event, $param) {
         global $INFO, $ID;
    
         $this->get_permission(); 
         $page = noNS($ID) . '.txt';
-        $files = "\nfiles: " . print_r($this->files,1);
+     
         if(!$this->files) {    
             return;
         }
