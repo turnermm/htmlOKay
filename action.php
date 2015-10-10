@@ -48,7 +48,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
      function dw_started(&$event, $param) {
         $act = act_clean($event->data);
         if($_COOKIE["act_time"]) {
-                touch(CONFIG_FILE, $_COOKIE["act_time"] -20);    
+                touch(CONFIG_FILE, $_COOKIE["act_time"]);    
                 setcookie('act_time', $_COOKIE["act_time"] , time() -3600,DOKU_BASE);
         }
      }
