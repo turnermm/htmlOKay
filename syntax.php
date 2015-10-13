@@ -36,6 +36,8 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     var $closed_div = 0;
     var $divs_reported = false;
     var $JS_ErrString = "";
+    var $helper;
+    var $access;
     
     function __construct()
     {
@@ -69,7 +71,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
         {
             $this->JS_ErrString .= $this->get_JSErrString("client:  " . $INFO['client']);
         }
-      #  $this->JS_ErrString .= $this->get_JSErrString("\$conf['htmlok']: " . $conf['htmlok']);
+     
         $this->JS_ErrString .= $this->get_JSErrString("Scope: " . $INFO['htmlOK_access_scope']);
         $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
         if ($INFO['hmtlOK_access_level'] > 0)
@@ -79,7 +81,6 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
         else
         {
             $this->access_level = $INFO['htmlOK_displayOnly'];
-            // echo  "Display Only.  Access Level: $this->access_level<br />";
         }
           
     }
@@ -407,6 +408,11 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     {
         global $conf;
         $this->pos = $pos;
+        
+        $this->helper = plugin_load('helper', 'htmlOKay');        
+        $this->helper->set_permissions();
+        $this->access_level = $this->helper->get_access();
+            
         if (!$conf['htmlok'])
         {
             $match = preg_replace ('/</', '&lt;', $match) . '<br />';
