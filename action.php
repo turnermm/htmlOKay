@@ -12,9 +12,6 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 {
     var $saved_inf;
     var $files;
-    var $users;
-    var $groups;
-    var $INFO_Writable;
     var $db_msg = "";
     var $do_dbg = false;
     var $access_file;
@@ -89,35 +86,26 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         global $conf;
         global $INFO;
         
-        if (empty($INFO['namespace'])) {
-           $INFO['namespace'] = getNS($ID);
-        }
-        if (!empty($INFO['namespace']))
-        {
-            $namespace = $INFO['namespace'];
-        }
-        else
-        {
-            $namespace = '_ROOT_';
-        }
+        $this->helper->get_info();
 
+       $namespace = $this->helper->get_namespace();
+    //    msg('from helper: ' . $namespace );
         $this->namespace = $namespace;
         $namespace = str_replace(':', '#', $namespace);
+       //  msg($namespace );
         $access_file = $this->helper->get_access_file(HTMLOK_ACCESS_DIR, $namespace);
         $this->set_dbg_msg("access file: $access_file");
         if (file_exists($access_file))
         {
             $INFO['htmlOK_access_scope'] = $this->helper->get_access_scope($access_file);            
             $this->set_dbg_msg("file exists: access file: $access_file");            
-            $this->saved_inf = io_readFile($access_file, false); // 'false' returns uncleaned string for unserialize
+            $this->saved_inf = $this->helper->get_saved_inf(); 
             if (!$this->saved_inf)
             {
                 return;
             }
-            $this->saved_inf = unserialize($this->saved_inf);
+
             $this->files = $this->saved_inf['filespecs'];
-            $this->users = $this->saved_inf['user'];
-            $this->groups = $this->saved_inf['group'];
             if(!empty($INFO['filepath']))  {
                $this->curent_file = end(preg_split('/\//', $INFO['filepath']));
             }

@@ -17,6 +17,7 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
    var $users;
    var $groups;
    var $display;
+   var $namespace;
    
   function getMethods(){
     $result = array();
@@ -86,7 +87,11 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
     }
     
     function get_saved_inf() {
+         return $this->saved_inf;
+    }
       
+    function get_namespace() {
+         return $this->namespace;
     }
     
      function set_permissions()
@@ -304,11 +309,6 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
         return $level;
     }
 
-  function  __set_permissions($access_level) {
-     global $INFO;
-     $this->access_level = $access_level;
-  }
-  
   function get_access() {  
       return $this->access_level;
   }
