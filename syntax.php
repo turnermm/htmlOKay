@@ -29,7 +29,6 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     var $access_level = 0;
     var $client;
     var $msgs;
-    var $msgs_inx = 0;
     var $htmlOK_errors;
     var $cycle = 0;
     var $open_div = 0;
@@ -37,7 +36,6 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     var $divs_reported = false;
     var $JS_ErrString = "";
     var $helper;
-    var $access;
     
     function __construct()
     {
@@ -50,7 +48,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
             'ID Selectors not supported', 'Invalid Javascript function name(s)');
 
         $this->msgs = "";
-       
+/*       
         if ($INFO['htmlOK_client'])
         {
             $cache = new cache($ID, ".xhtml");
@@ -82,7 +80,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
         {
             $this->access_level = $INFO['htmlOK_displayOnly'];
         }
-          
+   */       
     }
 
 
@@ -597,11 +595,11 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     {
         global $INFO;
         $msg = trim($msg);
+        static $msgs_inx = -1;
+      
         if (!isset($msg) || empty($msg)) return "";
-
-        $msg = '<script language="javascript">htmlOK_ERRORS_ARRAY[' . $this->msgs_inx . ']="' . $msg . '"; </script>' . "\n";
-        $this->msgs_inx++;
-
+        $msgs_inx++;     
+        $msg = '<script language="javascript">htmlOK_ERRORS_ARRAY[' . $msgs_inx . ']="' . $msg . '"; </script>' . "\n";
         return $msg;
     }
 }

@@ -27,7 +27,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'modify_headers', array());   
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'dw_started', array());   
         $controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this, 'act_before', array());   
-               
+        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'AFTER', $this, 'setup_debug', array());                      
     }
 
      function act_before(&$event, $param) {
@@ -50,7 +50,6 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $this->_init();
      }
      
-    
    function modify_headers(&$event, $param) {
         global $INFO, $ID;
    
@@ -89,10 +88,9 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $this->helper->get_info();
 
        $namespace = $this->helper->get_namespace();
-    //    msg('from helper: ' . $namespace );
+    
         $this->namespace = $namespace;
         $namespace = str_replace(':', '#', $namespace);
-       //  msg($namespace );
         $access_file = $this->helper->get_access_file(HTMLOK_ACCESS_DIR, $namespace);
         $this->set_dbg_msg("access file: $access_file");
         if (file_exists($access_file))
@@ -116,33 +114,6 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         }
     }
 
-    function get_access_file($access_dir, $namespace)
-    {
-        $file = $access_dir . '/' . $namespace;
-       // $this->set_dbg_msg("Original access file: $file");
-        if (file_exists($file))
-        {
-          //  $this->set_dbg_msg("Tried Original access file: $file");
-            return $file;
-        }
-
-        $dirs = explode('#', $namespace);
-        foreach($dirs as $dir)
-        {
-            array_pop($dirs);
-            $new_dir = implode('#', $dirs);
-            $file = $access_dir . '/' . $new_dir;
-           // $this->set_dbg_msg("Tried access file: $file");
-            
-            if (file_exists($file))
-            {
-             //   $this->set_dbg_msg("File exists: $file");                
-                return $file;
-            }
-        }
-        return $access_dir . '/' . $namespace;
-    }
-    
    function action_link(&$event, $param)
     {
           global $INFO;
@@ -177,8 +148,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
            $this->do_dbg = true;
         }
         $this->get_info();    
-        $this->format_error_window();
-        $this->debug();
+      
     }
 
     function htmlOK_plugin_shutdown()
@@ -187,6 +157,11 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         plugin_disable('htmlOK');
     }
 
+    function setup_debug(&$event, $param) {              
+             $this->format_error_window();
+             $this->debug();
+    }
+    
     function format_error_window()
     {
         echo <<<ERRORWINDOW
@@ -234,7 +209,8 @@ ERRORWINDOW;
         global $ID;
         global $conf;
         global $NS;
-        if(!isset($INFO['htmlOK_client'])  || !$INFO['htmlOK_client']) return; 
+       
+        if(!isset($INFO['userinfo']) ) return ; // && !$INFO['htmlOK_client']) return; 
         if(!$this->do_dbg) return;
 
         echo <<<DBG_JS
@@ -274,7 +250,7 @@ DBG_JS;
 
 
         echo "<br />Saved Info:";
-        print_r($this->saved_inf);
+        print_r($this->saved_inf,true);
 
         echo "</pre>";
 

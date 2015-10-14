@@ -18,6 +18,7 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
    var $groups;
    var $display;
    var $namespace;
+   var $db_msg;
    
   function getMethods(){
     $result = array();
@@ -117,7 +118,7 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
         }
 
         // have HTML permissions been set for this file in current namespace?
-         //$this->set_dbg_msg("permissions exist");
+        $this->set_dbg_msg("permissions exist");
         foreach($this->files as $file)
         {
             if ($file == $this->curent_file || $file == 'all')
@@ -162,13 +163,13 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
             }
         }
 
-      //  if ($in_users) $this->set_dbg_msg("User found: " . $INFO['client']);
-     //   else $this->set_dbg_msg("User " . $INFO['client'] . '  not found');
+        if ($in_users) $this->set_dbg_msg("User found: " . $INFO['client']);
+        else $this->set_dbg_msg("User " . $INFO['client'] . '  not found');
 
         if ($in_group)
         {
             $str = print_r($groups_found, true);
-         //   $this->set_dbg_msg("Group(s) found: $str");
+            $this->set_dbg_msg("Group(s) found: $str");
         }
         // If the user is not among groups or users with access then permissions are according to ACL
         // check to see if the page uses HTML and has a default HTML access level
@@ -178,17 +179,16 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
             if (isset($this->saved_inf['display']))
             {
                 $INFO['hmtlOK_access_level'] = $this->get_permission_level('display', $this->saved_inf);
-            //    $this->set_dbg_msg("Display:  {$INFO['hmtlOK_access_level']}");
+                $this->set_dbg_msg("Display: " . $INFO['hmtlOK_access_level']);
                 $conf['htmlok'] = 1;
                 $INFO['htmlOK_visitor'] = true;
-               // touch($INFO['filepath']);
 
                 $cache = new cache($ID, ".xhtml");
                 trigger_event('PARSER_CACHE_USE', $cache);
 
                 return;
             }
-          //  $this->set_dbg_msg("Permission denied");
+            $this->set_dbg_msg("Permission denied");
             return;
         }
 
@@ -236,10 +236,10 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
       function get_access_file($access_dir, $namespace)
     {
         $file = $access_dir . '/' . $namespace;
-       // $this->set_dbg_msg("Original access file: $file");
+        $this->set_dbg_msg("Original access file: $file");
         if (file_exists($file))
         {
-          //  $this->set_dbg_msg("Tried Original access file: $file");
+            $this->set_dbg_msg("Tried Original access file: $file");
             return $file;
         }
 
@@ -249,11 +249,11 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
             array_pop($dirs);
             $new_dir = implode('#', $dirs);
             $file = $access_dir . '/' . $new_dir;
-           // $this->set_dbg_msg("Tried access file: $file");
+            $this->set_dbg_msg("Tried access file: $file");
             
             if (file_exists($file))
             {
-             //   $this->set_dbg_msg("File exists: $file");                
+                $this->set_dbg_msg("File exists: $file");                
                 return $file;
             }
         }
@@ -313,5 +313,9 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
       return $this->access_level;
   }
   
+   function set_dbg_msg($msg="") {
+      if(!$msg) return $this->db_msg;
+      $this->db_msg .= $msg . '<br />';       
+    }
 
 }
