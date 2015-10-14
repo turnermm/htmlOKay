@@ -310,7 +310,7 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
     }
 
   function get_access() {  
-      return $this->access_level;
+       return $this->get_permission_level('display', $this->saved_inf);
   }
   
    function set_dbg_msg($msg="") {

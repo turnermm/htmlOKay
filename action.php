@@ -20,14 +20,14 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 
     function register(&$controller)
     {
-        $controller->register_hook('HTMLOK_ACCESS_EVENT', 'BEFORE', $this, '_init');
+        $controller->register_hook('HTMLOK_ACCESS_EVENT', 'BEFORE', $this, 'errors_top');
         $controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this, 'bypasss_cache');
         $controller->register_hook('TEMPLATE_USERTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('user'));    
         $controller->register_hook('TEMPLATE_HTMLOKAYTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('ok'));
         $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'modify_headers', array());   
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'dw_started', array());   
         $controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this, 'act_before', array());   
-        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'AFTER', $this, 'setup_debug', array());                      
+        $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'errors_top', array());                      
     }
 
      function act_before(&$event, $param) {
@@ -162,12 +162,66 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
              $this->debug();
     }
     
+        function get_JSErrString($msg)
+    {
+      
+        $msg = trim($msg); 
+        static $msgs_inx = -1;
+      
+        if (!isset($msg) || empty($msg)) return "";     
+        $msgs_inx++;         
+        ptln('htmlOK_ERRORS_HEADER[' . $msgs_inx . ']="' . $msg . '"');
+    } 
+    
+    function  errors_top(&$event,$params) {    
+         global $INFO;      
+         static $done = false;
+         
+         if($done) return;
+         $done = true;
+         
+         $this->setup_debug ($event,$params);
+         ptln( '<script language="javascript">' );
+         ptln('var htmlOK_ERRORS_HEADER = new Array();');
+         if ($INFO['htmlOK_client'])
+        {        
+            $cache = new cache($ID, ".xhtml");
+            trigger_event('PARSER_CACHE_USE', $cache);
+        }
+        $this->JS_ErrString .= $this->get_JSErrString("<b>User Info:</b>");
+        $this->JS_ErrString .= $this->get_JSErrString("hmtlOK_access_level: " .  $this->helper->get_access()); //$INFO['hmtlOK_access_level']);
+        if ($INFO['htmlOK_client'])
+        {
+            $this->JS_ErrString .= $this->get_JSErrString("client:  " . $INFO['htmlOK_client']);
+        }
+        else
+        {
+            $this->JS_ErrString .= $this->get_JSErrString("client:  " . $INFO['client']);
+        }
+     
+        $this->JS_ErrString .= $this->get_JSErrString("Scope: " . $INFO['htmlOK_access_scope']);
+        $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
+        if ($INFO['hmtlOK_access_level'] > 0)
+        {
+            $this->access_level = $INFO['hmtlOK_access_level'];
+        }
+        else
+        {
+            $this->access_level = $INFO['htmlOK_displayOnly'];          
+        }
+          ptln( '</script>');  
+   }    
     function format_error_window()
     {
         echo <<<ERRORWINDOW
       <script language="javascript"><!--//--><![CDATA[//><!--
        var htmlOK_ERRORS_ARRAY = new Array();
+      
        function htmlOK_ERRORS(viz) {
+              for(i=0; i<htmlOK_ERRORS_HEADER.length;i++) {
+                  htmlOK_ERRORS_ARRAY.splice(0, 0, htmlOK_ERRORS_HEADER[i]);
+              }
+             
              var dom = document.getElementById("htmlOKDBG_ERRORWIN");
              var str = "";
              for(i=0; i<htmlOK_ERRORS_ARRAY.length;i++) {

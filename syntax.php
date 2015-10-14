@@ -39,48 +39,13 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     
     function __construct()
     {
-        global $INFO;
-        global $ID;
-        global $conf;
 
         $this->htmlOK_errors = array('Invalid ID', 'Element or Attribute not supported',
             'Internal Window Elements Not Supported', 'Invalid CSS Class name(s)',
             'ID Selectors not supported', 'Invalid Javascript function name(s)');
 
         $this->msgs = "";
-/*       
-        if ($INFO['htmlOK_client'])
-        {
-            $cache = new cache($ID, ".xhtml");
-            trigger_event('PARSER_CACHE_USE', $cache);
-
-            if ($INFO['hmtlOK_access_level'] > 0 && ! $conf['plugin']['htmlOKay']['custom_error_but'])
-            {
-                $this->JS_ErrString .= '<script language="javascript">show_htmlOKay_ERRORSLINK();</script>';
-            }
-        }
-        $this->JS_ErrString .= $this->get_JSErrString("<b>User Info:</b>");
-        $this->JS_ErrString .= $this->get_JSErrString("hmtlOK_access_level: " . $INFO['hmtlOK_access_level']);
-        if ($INFO['htmlOK_client'])
-        {
-            $this->JS_ErrString .= $this->get_JSErrString("client:  " . $INFO['htmlOK_client']);
-        }
-        else
-        {
-            $this->JS_ErrString .= $this->get_JSErrString("client:  " . $INFO['client']);
-        }
      
-        $this->JS_ErrString .= $this->get_JSErrString("Scope: " . $INFO['htmlOK_access_scope']);
-        $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
-        if ($INFO['hmtlOK_access_level'] > 0)
-        {
-            $this->access_level = $INFO['hmtlOK_access_level'];
-        }
-        else
-        {
-            $this->access_level = $INFO['htmlOK_displayOnly'];
-        }
-   */       
     }
 
 
