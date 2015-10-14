@@ -118,7 +118,8 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     {
           global $INFO;
  
-         if($INFO['htmlOK_client'] && $INFO['hmtlOK_access_level'] > 0) {
+         
+         if(!empty($INFO['userinfo'])) {
               $name = "HTML Error Window";
               if($param[0] == 'ok') {
                   $htm_open = '<span>';
@@ -188,7 +189,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
             $cache = new cache($ID, ".xhtml");
             trigger_event('PARSER_CACHE_USE', $cache);
         }
-        $this->JS_ErrString .= $this->get_JSErrString("<b>User Info:</b>");
+        $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
         $this->JS_ErrString .= $this->get_JSErrString("hmtlOK_access_level: " .  $this->helper->get_access()); //$INFO['hmtlOK_access_level']);
         if ($INFO['htmlOK_client'])
         {
@@ -200,7 +201,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         }
      
         $this->JS_ErrString .= $this->get_JSErrString("Scope: " . $INFO['htmlOK_access_scope']);
-        $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
+        $this->JS_ErrString .= $this->get_JSErrString("<b>User Info:</b>");
         if ($INFO['hmtlOK_access_level'] > 0)
         {
             $this->access_level = $INFO['hmtlOK_access_level'];
@@ -216,20 +217,26 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         echo <<<ERRORWINDOW
       <script language="javascript"><!--//--><![CDATA[//><!--
        var htmlOK_ERRORS_ARRAY = new Array();
+       var htmlOK_ERRORS_merged = false;
       
        function htmlOK_ERRORS(viz) {
+             var dom = document.getElementById("htmlOKDBG_ERRORWIN");
+             if(htmlOK_ERRORS_merged) {   
+                 dom.innerHTML = htmlOK_ERRORS_merged;
+                 return;
+             }
               for(i=0; i<htmlOK_ERRORS_HEADER.length;i++) {
                   htmlOK_ERRORS_ARRAY.splice(0, 0, htmlOK_ERRORS_HEADER[i]);
               }
              
-             var dom = document.getElementById("htmlOKDBG_ERRORWIN");
+            
              var str = "";
              for(i=0; i<htmlOK_ERRORS_ARRAY.length;i++) {
                   if(htmlOK_ERRORS_ARRAY[i]) {
                       str += (htmlOK_ERRORS_ARRAY[i] + "<br />");
                   }
              }
-
+             htmlOK_ERRORS_merged = str;       
              dom.innerHTML = str;
              if(!viz) return;
              dom.style.display=viz;
