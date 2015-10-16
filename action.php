@@ -44,7 +44,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
      function dw_started(&$event, $param) {
         $act = act_clean($event->data);
         if($_COOKIE["act_time"]) {
-                touch(CONFIG_FILE, $_COOKIE["act_time"]);    
+                touch(CONFIG_FILE, $_COOKIE["act_time"]);    // reset local.php back to time prior to admin access
                 setcookie('act_time', $_COOKIE["act_time"] , time() -3600,DOKU_BASE);
         }
         $this->_init();
@@ -190,7 +190,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
             trigger_event('PARSER_CACHE_USE', $cache);
         }
         $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
-        $this->JS_ErrString .= $this->get_JSErrString("hmtlOK_access_level: " .  $this->helper->get_access()); //$INFO['hmtlOK_access_level']);
+        $this->JS_ErrString .= $this->get_JSErrString("hmtlOK_access_level: " .  $this->helper->get_access()); 
         if ($INFO['htmlOK_client'])
         {
             $this->JS_ErrString .= $this->get_JSErrString("client:  " . $INFO['htmlOK_client']);

@@ -25,14 +25,48 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
     $result[] = array(
       'name'   => 'set_permissions',
       'desc'   => "initialize current user's access permissions",
-      //'params' => array('js' => 'string'),
-      //'return' => array('html' => 'string'),
+       'params' =>array()           
     );
     $result[] = array(
-       'name'   => 'set_permissions',
-      'desc'   => 'return current access permissions',
-      //'params' => array('js' => 'string'),
-      'return' => array('html' => 'string'),
+       'name'   => 'get_namespace',
+      'desc'   => 'returns current access namespace', 
+      'params' =>array(),     
+      'return' => array('namespace' => 'string')
+    );
+    $result[] = array(
+       'name'   => 'get_access_scope',
+      'desc'   => 'returns current access scope with namespace colons replaced with hashes: ns#ns2#page',   
+       'params' =>array('path' => 'string') , 
+      'return' => array('access_scope' => 'string')
+    );    
+   $result[] = array(
+       'name'   => 'set_DokuWikiDefault_perm',
+       'desc'   => 'sets htmlok=0,$INFO[htmlOK_client] = false',
+       'params' =>array()           
+    ); 
+   $result[] = array(
+       'name'   => 'get_access_file',
+       'desc'   => 'returns system path to file holding access data',   
+       'params' =>array('access_dir' => 'string', 'namespace' => 'string') ,     
+      'return' => array('acces_file' => 'string')
+    );    
+   $result[] = array(
+       'name'   => 'in_groups',
+       'desc'   => 'checks htmlOKay user groups against INFO[userinfo][groups] to see if this is htmlOKay user',   
+       'params' =>array('INF0_groups' => 'string', 'groups' => 'string'),      
+      'return' => array('in_group' => 'bool')
+    );
+   $result[] = array(
+       'name'   => 'get_permission_level',
+       'desc'   => 'checks htmlOKay user groups against INFO[userinfo][groups] to see if this is htmlOKay user',   
+       'params' =>array('info' => 'mixed', 'htmlok' => 'mixed'),      
+      'return' => array('level' => 'integer')
+    );
+   $result[] = array(
+       'name'   => 'get_access ',
+       'desc'   => 'gets current access level',   
+       'params' =>array(),      
+      'return' => array('level' => 'integer')
     );
     return $result;
   }
@@ -310,6 +344,11 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
     }
 
   function get_access() {  
+      global $INFO;
+      
+      if($INFO['hmtlOK_access_level'] ) {       
+         return $INFO['hmtlOK_access_level'];
+       }
        return $this->get_permission_level('display', $this->saved_inf);
   }
   
