@@ -26,27 +26,10 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $controller->register_hook('TEMPLATE_HTMLOKAYTOOLS_DISPLAY', 'BEFORE', $this, 'action_link', array('ok'));
         $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'modify_headers', array());   
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'dw_started', array());   
-        $controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this, 'act_before', array());   
         $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'errors_top', array());                      
     }
 
-     function act_before(&$event, $param) {
-         global $INPUT;
-         $act = act_clean($event->data);         
-         $page = $INPUT->str('page');
-         if($act == 'admin' && $page) {          
-            $ftm = filemtime (CONFIG_FILE);        
-            setcookie('act_time', $ftm , null,DOKU_BASE);
-         }
-         else  setcookie('act_time', $ftm , time() -3600,DOKU_BASE);
-     }
-
      function dw_started(&$event, $param) {
-        $act = act_clean($event->data);
-        if($_COOKIE["act_time"]) {
-                touch(CONFIG_FILE, $_COOKIE["act_time"]);    // reset local.php back to time prior to admin access
-                setcookie('act_time', $_COOKIE["act_time"] , time() -3600,DOKU_BASE);
-        }
         $this->_init();
      }
      
