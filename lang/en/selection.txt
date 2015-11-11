@@ -1,0 +1,8 @@
+Use this page to set HTML access policies for users and groups.
+Users and groups which are not granted privileges cannot use HTML in their pages.
+**H**, **M**, **L**,and **U** refer to the number and degree of restrictions placed on HTML users.
+**H** is the highest number, **M** a Middle range, **L** a Low or Lax set of restrictions.  **U** is Unrestricted. 
+For security, set the restriction policies as High as possible.
+The directory ''htmlOKay/conf/access'' must be writable by Dokuwiki.
+
+**Note:** first select the namespace; then highlight your selections and click ''Save''.

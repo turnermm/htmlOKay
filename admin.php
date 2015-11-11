@@ -288,7 +288,7 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
         {
             list($checked_strict, $checked_medium, $checked_lax, $su) = $this->get_checked($group, $this->saved_inf['group']);
 
-            $options[] = "<td class='centeralign'><input type='radio' value='strict' $checked_strict name='group[$group]' />" . "<td class='centeralign'><input type='radio' value='medium' $checked_medium name='group[$group]' />" . "<td class='centeralign'><input type='radio' value='lax' $checked_lax name='group[$group]' />" . "<th><a href='javascript:show_this(\"group[$group]\");'>R</a></th>" . "</td><td>$group</td>";
+            $options[] = "<td class='centeralign'><input type='radio' value='strict' $checked_strict name='group[$group]' />" . "<td class='centeralign'><input type='radio' value='medium' $checked_medium name='group[$group]' />" . "<td class='centeralign'><input type='radio' value='lax' $checked_lax name='group[$group]' />" . "<th><a href='javascript:show_this(\"group[$group]\");'>R</a></th>" . "<td>$group</td>";
         }
 
         return $options;
@@ -477,7 +477,7 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
     //--><!]]></script>
 
 <style type="text/css">
-#htmlOK_user_table { position:relative; height: 180px;  overflow:visible;}
+#htmlOK_user_table { position:relative;  overflow:visible; margin:auto;}
 #results { width: 25em; }
 </style>
 
@@ -492,23 +492,21 @@ SCRIPTS;
         global $ID;
 
         $this->print_scripts($this->ajax_script);
-        echo "<div id='htmlOK_div'>\n";
+         
+        echo "<div id='htmlOK_div' style='width:100%'>\n";
         $this->debug(false,false);
         ptln('<CENTER><H1>Embedded HTML Access Manager</H1></CENTER>');
         if ($this->error_msg)
         {
             print "<center><h4>$this->error_msg</h4></center>";
         }
-        ptln('<CENTER><TABLE align="center" width="80%"><TR><TD>');
-        ptln('Use this page to set HTML access policies for users and groups.');
-        ptln('Users and groups which are not granted privileges cannot use HTML in their pages.');
-        ptln('<b>H</b>, <b>M</b>, <b>L</b>,and <b>U</b> refer to the number and degree of restrictions placed on HTML users.');
-        ptln('<b>H</b> is the highest number, <b>M</b> a Middle range, <b>L</b> a Low or Lax set of restrictions.  <b>U</b> is Unrestricted. ');
-        ptln('For security, set the restriction policies as High as possible.');
-        ptln('The directory <b>htmlOKay/conf/access</b> must be writeable by Dokuwiki');
+        ptln('<div style="width: 85%;margin: 0; margin: auto">');
+       
+        ptln('<TABLE align="center" width="80%"><TR><TD>');
+       echo $this->locale_xhtml('selection');
         ptln("\n</TABLE>\n");
 
-        ptln('<TABLE align="center"></TR>');
+        
         /* Start Form */
         ptln("\n" . '<form action="' . wl($ID) . '" method="POST" name="nsdata"' . ' >');
         ptln('<input type="hidden" name="do"   value="admin" />' . "\n"
@@ -527,7 +525,7 @@ SCRIPTS;
         echo "</table>\n";
 
         /* Buttons */
-        ptln('<div  class="bar" style="width:80%">');
+        ptln('<div  class="bar" style="width:30%; margin: 0 auto;">');
         ptln('<INPUT TYPE="SUBMIT" class="button"  VALUE="Save" />');
         ptln('<INPUT TYPE="BUTTON" class="button"  VALUE="Reset"  onclick="reset_htmlOKay(window.document[\'nsdata\']);" />');
         ptln('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<INPUT TYPE="BUTTON" class="button" id = "htmlOK_scrollbutton" VALUE="Scroll" onclick="scrollbars_htmlOKay();" />');
@@ -538,7 +536,7 @@ SCRIPTS;
 
         ptln('<tr><td valign="top"><table cellpadding="8" class="inline">');
         ptln('<TR><TH colspan="4">Policy</TH><TH rowspan="2">Groups</TH>');
-        ptln('<TR><TH>H</TH><TH>M</TH><TH>L</TH><TH>Reset</TH>');
+        ptln('<TR><TH>H</TH><TH>M</TH><TH>L</TH><TH>Reset</TH></tr>');
         $options = $this->get_group_options();
         foreach($options as $option)
         {
@@ -547,7 +545,7 @@ SCRIPTS;
         ptln('</table>'); // End Groups table
 
         /* Users Table */
-        ptln('<td><table cellpadding="8"   class="inline">' . '<th colspan="5">Policy</th><th rowspan="2">User</th><th rowspan="2">Real Name</th>' . ' <th rowspan="2">Email</th><th rowspan="2">Groups</th>');
+        ptln('<td><table cellpadding="8"  class="inline">' . '<tr><th colspan="5">Policy</th><th rowspan="2">User</th><th rowspan="2">Real Name</th>' . ' <th rowspan="2">Email</th><th rowspan="2">Groups</th>');
         ptln('<TR><TH>H</TH><TH>M</TH><TH>L</TH><TH>U</TH><TH>Reset</TH>');
 
         $options = $this->get_user_options();
@@ -558,10 +556,10 @@ SCRIPTS;
         ptln('</table>'); // End users table
 
         /* Close Table, close Form */
-        ptln("\n</TABLE></div></CENTER>\n");
+        ptln("\n</TABLE></div>\n");
         ptln("</form><br />\n");
 
-        echo "</div>\n"; // close htmlOK_div
+        echo "</div></div>\n"; // close htmlOK_div
 
         if ($this->scrollbars)
         {
