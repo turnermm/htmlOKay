@@ -18,7 +18,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     var $namespace;
     var $helper;
 
-    function register(&$controller)
+    function register(Doku_Event_Handler  $controller)
     {
         $controller->register_hook('HTMLOK_ACCESS_EVENT', 'BEFORE', $this, 'errors_top');
         $controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this, 'bypasss_cache');
@@ -88,7 +88,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 
             $this->files = $this->saved_inf['filespecs'];
             if(!empty($INFO['filepath']))  {
-               $this->curent_file = end(preg_split('/\//', $INFO['filepath']));
+               $this->curent_file =  basename($INFO['filepath']);             
             }
             else {
                $this->curent_file = noNS($ID) . '.txt';

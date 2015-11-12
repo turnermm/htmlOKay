@@ -111,7 +111,7 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
             $this->users = $this->saved_inf['user'];
             $this->groups = $this->saved_inf['group'];
             if(!empty($INFO['filepath']))  {
-               $this->curent_file = end(preg_split('/\//', $INFO['filepath']));
+               $this->curent_file = basename($INFO['filepath']);               
             }
             else {
                $this->curent_file = noNS($ID) . '.txt';
