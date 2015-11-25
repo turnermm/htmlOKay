@@ -222,6 +222,10 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
     */
     function traverseDirTree($base, $fileFunc, $dirFunc = null, $afterDirFunc = null)
     {
+       if(!is_readable ($base)) {
+           msg("$base is not readable",2);
+           return;       
+        }   
         $subdirectories = opendir($base);
         while (($subdirectory = readdir($subdirectories)) !== false)
         {
