@@ -1,7 +1,7 @@
 base   htmlOKay
 author  Myron Turner
 email  turnermm02@shaw.ca
-date  2016-07-31
+date  2016-09-05
 name  htmlOKay
 desc  Restricts HTML access to designated users and groups at one of four access levels.
 url  https://www.dokuwiki.org/plugin:htmlokay

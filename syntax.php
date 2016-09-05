@@ -62,7 +62,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
     */
     function getPType()
     {
-        return 'normal';
+        return 'block';
     }
 
     /**
@@ -488,8 +488,8 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
             $xtra = ">{$xtra}";
         }
 
-        $error_string = "{$xtra}<center><dl style='border-width:0px 0px 0px 0px; border-color: #ffffff; '><DT><DD><TABLE WIDTH='80%' cellpadding='10' border>"
-         . "<TD  align='center' style='background-color:#eeeeee;font-weight:normal; font-size: 10pt; font-family:sans-serif;'>\n";
+        $error_string = "{$xtra}<center><dl style='border-width:0px 0px 0px 0px; border-color: #ffffff; '><DT><DD><TABLE WIDTH='80%' cellpadding='10' border>\n"
+         . "<TR><TD  align='center' style='background-color:#eeeeee;font-weight:normal; font-size: 10pt; font-family:sans-serif;'>\n";
 
         if (is_string($problem_str))
         {
@@ -550,7 +550,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
                 break;
         }
 
-        return $error_string . '</TABLE></dl></center><br />';
+        return $error_string . '</TR></TD></TABLE></dl></center><br />';
     }
 
     /**
