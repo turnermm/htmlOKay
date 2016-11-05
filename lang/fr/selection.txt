@@ -1,0 +1,7 @@
+Utilisez cette page pour choisir des droits d'accès HTML pour les utilisateurs et les groupes. Les utilisateurs et les groupes qui ne reçoivent pas de privilèges ne peuvent pas utiliser d'HTML dans leurs pages.
+*H**, **M**, **L** et **U** se réfèrent aux nombres et degrés de restriction concernant les utilisateurs HTML.
+**H** est la valeur la plus élevée, **M** est une valeur moyenne, **L** est une valeur faible. **U** signifie «sans restrictions».
+Pour des raisons de sécurité, configurez les valeurs les plus hautes possibles.
+Le répertoire ''htmlOKay/conf/access'' doit être accessible en écriture par Dokuwiki.
+
+**Note:** Configurez prioritairement un espace de nom; puis vos sélections, puis cliquez sur «Sauver»
