@@ -62,7 +62,8 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
            if(isset($depends))    {               
                if(!empty($cache->depends['files'])) {             
                 $cache->depends['files'][] = $meta_file;
-               if(isset( $event->data)) msg('<pre>c = ' . print_r($event->data, 1) .'</pre>');
+                //msg($cache->cache);
+               //msg('<pre>c = ' . print_r($event->data, 1) .'</pre>');
              }
             else $cache->depends['files'] = array($meta_file);        
         }         
