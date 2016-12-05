@@ -18,7 +18,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     var $namespace;
     var $helper;
 
-    function register(Doku_Event_Handler  $controller)
+    function register(Doku_Event_Handler $controller)
     {
         $controller->register_hook('HTMLOK_ACCESS_EVENT', 'BEFORE', $this, 'errors_top');
         $controller->register_hook('PARSER_CACHE_USE', 'BEFORE', $this, 'bypasss_cache');
@@ -53,14 +53,19 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     function bypasss_cache(&$event, $param)
     {
         global $INFO;
-
-        if ($INFO['htmlOK_client'] || isset($_GET['refresh']))
-        {
-            $event->preventDefault();
-            $event->stopPropagation();
-            $event->result = false;
-        }
-      
+            $cache =$event->data;
+     
+          if (!isset($cache->page)) return;        
+            if (isset($cache->mode) &&  $cache->mode == 'metadata') return;
+           $depends = p_get_metadata($cache->page, 'relation htmlokay');
+           $meta_file = metaFN($cache->page,'.meta');
+           if(isset($depends))    {               
+               if(!empty($cache->depends['files'])) {             
+                $cache->depends['files'][] = $meta_file;
+               if(isset( $event->data)) msg('<pre>c = ' . print_r($event->data, 1) .'</pre>');
+             }
+            else $cache->depends['files'] = array($meta_file);        
+        }         
     }
 
     function get_info()
@@ -166,12 +171,8 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
          
          $this->setup_debug ($event,$params);
          ptln( '<script language="javascript">' );
-         ptln('var htmlOK_ERRORS_HEADER = new Array();');
-         if ($INFO['htmlOK_client'])
-        {        
-            $cache = new cache($ID, ".xhtml");
-            trigger_event('PARSER_CACHE_USE', $cache);
-        }
+         ptln('var htmlOK_ERRORS_HEADER = new Array();');     
+  
         $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
         $this->JS_ErrString .= $this->get_JSErrString("hmtlOK_access_level: " .  $this->helper->get_access()); 
         if ($INFO['htmlOK_client'])
@@ -300,6 +301,14 @@ DBG_JS;
 
         echo "</div>";
     }
+    
+     function write_debug($what) {
+     return;
+     $handle = fopen("htmlok_php.txt", "a");
+     if(is_array($what)) $what = print_r($what,true);
+     fwrite($handle,"$what\n");
+     fclose($handle);
+  }
 }
 
 ?>

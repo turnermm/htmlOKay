@@ -468,6 +468,11 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
             }
 
             return true;
+        } 
+       if($mode = 'metadata') 
+        {         //   msg('<pre>'. print_r($renderer->meta,1) . '</pre>' );
+                     $renderer->meta['relation']['htmlokay'] = time();            
+             return true;
         }
 
         return false;
