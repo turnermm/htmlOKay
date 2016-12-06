@@ -2,6 +2,7 @@
 if (!defined('DOKU_INC')) die();
 
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if(!defined('HTMLOK_WIKI_PATH'))define ('HTMLOK_WIKI_PATH', DOKU_INC . 'data/pages/');
 require_once(DOKU_PLUGIN . 'action.php');
 if (!defined('HTMLOK_ACCESS_DIR')) define('HTMLOK_ACCESS_DIR', realpath(dirname(__FILE__)) . '/conf/access');
 define ('CONFIG_FILE', DOKU_INC . 'conf/local.php');
@@ -132,12 +133,19 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 
     function _init()
     {
-        global $INFO;
+        global $INFO, $JSINFO;
         $this->helper = $this->loadhelper('htmlOKay',1);
         if(isset($_GET['htmlOKay_dbg'])) {
            $this->do_dbg = true;
         }
         $this->get_info();    
+        $script = DOKU_PLUGIN .'htmlOKay/directory_scan-3.php';                
+        $document_root = $_SERVER['DOCUMENT_ROOT'];
+        $url = preg_replace('/' . preg_quote($document_root, '/') . '/', "", $script);
+        $url = '/' . ltrim($url, '/');
+        $JSINFO['url'] = $url;
+        //msg($JSINFO['url']);
+        $JSINFO['path'] =  HTMLOK_WIKI_PATH;
       
     }
 

@@ -4,3 +4,5 @@
 #htmlOK_div a:link { color: __text__; text-decoration: underline; }
 #htmlOK td.bar { background-color: __background_alt__; }
 
+#htmlOK_user_table { position:relative;  overflow:visible; margin:auto;}
+#results { width: 25em; }

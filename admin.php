@@ -7,7 +7,7 @@
 
 if (!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__) . '/../../../') . '/');
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-define ('HTMLOK_WIKI_PATH', DOKU_INC . 'data/pages/');
+if(!defined('HTMLOK_WIKI_PATH'))define ('HTMLOK_WIKI_PATH', DOKU_INC . 'data/pages/');
 if(!defined('DOKU_CONF')) define('DOKU_CONF',DOKU_INC.'conf/');
 define('AUTH_USERFILE', DOKU_CONF . 'users.auth.php');
 require_once(DOKU_PLUGIN . 'admin.php');
@@ -35,7 +35,8 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
     var $user_entries = 0;
     var $show_debug = false;
 
-    function admin_plugin_htmlOKay()
+  //  function admin_plugin_htmlOKay()
+     function __construct()
     {
         global $conf;
         $this->plugin_name ='htmlOKay'; 
@@ -395,96 +396,7 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
         echo <<<SCRIPTS
 
     <script language="javascript"><!--//--><![CDATA[//><!--
-    var scroll_visible_htmlOKay = false;
-
-    function handleHttpResponse_htmlOKay() {
-
-      if (httpXMLobj_htmlOKay.readyState == 4 && httpXMLobj_htmlOKay.status==200) {
-        if (httpXMLobj_htmlOKay.responseText.indexOf('invalid') == -1) {
-            var f = window.document['nsdata'];
-            reset_htmlOKay(f);
-            var s = f['filespecs[]'];
-            s.options.length = 0;
-
-            var data = httpXMLobj_htmlOKay.responseText.split("%%");
-            var opts = data[0];
-            var access = data[1];
-
-           var access_array =  get_access_array_htmlOKay(access);
-
-            var selected_files = get_selected_files_htmlOKay(access_array['filespecs']);
-            var opt_array = opts.split("|");
-            var selected_default;
-            for(var i=0; i<opt_array.length-1; i++) {
-                var ar = opt_array[i].split(":");
-                var selected = false;
-                if(ar.length == 3 && !selected_default) selected_default = i;
-                if(selected_files[ar[1]]) {
-                        selected = true;
-                        selected_default = -1;
-                }
-
-                var o = new Option(ar[0],ar[1]);
-                s.options[i] = o;
-                s.options[i].selected = selected;
-            }
-          if(selected_default &&  selected_default > -1) {
-                    s.options[i].selected = true;
-          }
-
-            update_groups_htmlOKay(f, access_array['group'] )
-            update_users_htmlOKay(f, access_array['user'] )
-        }
-
-      }   // readyState == 4
-    }
-
-    function update_avail_htmlOKay(qstr) {
-        var url = "$url?path=$path&";
-	var path = "$path";
-
-        qstr = qstr.replace(/\&amp;/g,"&");
-        httpXMLobj_htmlOKay.open("GET", url + qstr, true);
-        httpXMLobj_htmlOKay.onreadystatechange = handleHttpResponse_htmlOKay;
-        httpXMLobj_htmlOKay.send(null);
-     }
-
-
-    function getHTTPObject_htmlOKay() {
-
-      var xmlhttp;
-      /*@cc_on
-      @if (@_jscript_version >= 5)
-        try {
-          xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-          try {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (E) {
-            xmlhttp = false;
-          }
-        }
-      @else
-      xmlhttp = false;
-      @end @*/
-      if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
-        try {
-          xmlhttp = new XMLHttpRequest();
-        } catch (e) {
-          xmlhttp = false;
-        }
-      }
-      return xmlhttp;
-    }
-
-    var httpXMLobj_htmlOKay = getHTTPObject_htmlOKay(); // We create the HTTP Object
-
     //--><!]]></script>
-
-<style type="text/css">
-#htmlOK_user_table { position:relative;  overflow:visible; margin:auto;}
-#results { width: 25em; }
-</style>
 
 SCRIPTS;
     }
