@@ -390,6 +390,7 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
     function print_scripts($url)
     {
         $path = HTMLOK_WIKI_PATH;
+        $url = '/' . ltrim($url, '/');
 
         echo <<<SCRIPTS
 
