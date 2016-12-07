@@ -6,9 +6,6 @@ $path = rawurldecode($_REQUEST['path']);
 
 $abs_path = rawurldecode($_REQUEST['abs_path']);
 
-
-//file_put_contents('raw.txt', $path . "\n" . $abs_path);
-
 $wiki_home = $path;
 
 function init() {
@@ -163,9 +160,6 @@ if(file_exists($access_file)) {
  $data = unserialize($str);
   
 }
-
-// $str = file_get_contents (ACCESS_DIR . $namespace_descriptor);
-//$data = unserialize($str);
 
 
 $output=""; 

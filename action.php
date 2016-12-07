@@ -7,8 +7,7 @@ require_once(DOKU_PLUGIN . 'action.php');
 if (!defined('HTMLOK_ACCESS_DIR')) define('HTMLOK_ACCESS_DIR', realpath(dirname(__FILE__)) . '/conf/access');
 define ('CONFIG_FILE', DOKU_INC . 'conf/local.php');
 require_once(DOKU_INC . 'inc/cache.php');
-// ini_set('error_reporting', E_ALL);
-// ini_set('display_errors', "on");
+
 class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 {
     var $saved_inf;
@@ -18,7 +17,9 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
     var $access_file;
     var $namespace;
     var $helper;
-
+    var $path;
+    var $directories;
+    var $abs_path;
     function register(Doku_Event_Handler $controller)
     {
         $controller->register_hook('HTMLOK_ACCESS_EVENT', 'BEFORE', $this, 'errors_top');
@@ -28,6 +29,23 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         $controller->register_hook('ACTION_HEADERS_SEND', 'BEFORE', $this, 'modify_headers', array());   
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'dw_started', array());   
         $controller->register_hook('TPL_ACT_RENDER', 'BEFORE', $this, 'errors_top', array());                      
+        $controller->register_hook('AJAX_CALL_UNKNOWN', 'BEFORE', $this, '_ajax', array());      
+        
+    }
+
+     function _ajax(&$event,$param) {
+      
+     if ($event->data !== 'htmlokay') {
+          return;
+     }   
+   
+     $this->directories = array();
+     $this->path = rawurldecode($_REQUEST['path']);
+     $this->abs_path = rawurldecode($_REQUEST['abs_path']);
+  
+  
+           $event->stopPropagation();
+          $event->preventDefault();
     }
 
      function dw_started(&$event, $param) {
