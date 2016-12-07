@@ -139,12 +139,8 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
            $this->do_dbg = true;
         }
         $this->get_info();    
-        $script = DOKU_PLUGIN .'htmlOKay/directory_scan-3.php';                
-        $document_root = $_SERVER['DOCUMENT_ROOT'];
-        $url = preg_replace('/' . preg_quote($document_root, '/') . '/', "", $script);
-        $url = '/' . ltrim($url, '/');
-        $JSINFO['url'] = $url;
-        //msg($JSINFO['url']);
+
+      
         $JSINFO['path'] =  HTMLOK_WIKI_PATH;
       
     }

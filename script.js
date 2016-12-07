@@ -103,8 +103,7 @@
     }
  
     function update_avail_htmlOKay(qstr) {
-        var url = JSINFO['url'];
-        
+        var url = DOKU_BASE + '/lib/plugins/htmlOKay/directory_scan-3.php';        
         url = url +"?path=" + JSINFO['path']  + '&';	
         qstr = 'abs_path=' + encodeURIComponent(qstr);       
          url = url + qstr;
