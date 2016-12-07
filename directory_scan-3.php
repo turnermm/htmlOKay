@@ -1,11 +1,14 @@
 <?php
 
-//ini_set('display_errors', "on");
-// ini_set('error_reporting', E_STRICT);
-
 define('ACCESS_DIR',realpath(dirname(__FILE__).'/').'/conf/access/');
 $directories = array();
-$path = $_GET['path'];
+$path = rawurldecode($_REQUEST['path']);
+
+$abs_path = rawurldecode($_REQUEST['abs_path']);
+
+
+//file_put_contents('raw.txt', $path . "\n" . $abs_path);
+
 $wiki_home = $path;
 
 function init() {
@@ -137,7 +140,7 @@ init();
 traverseDirTree($path,'outputpath','outputpath');
 
 
-$options = get_file_options($_GET['abs_path']);
+$options = get_file_options($abs_path);
 
 
 foreach($options as $option) { 
@@ -145,7 +148,7 @@ foreach($options as $option) {
 }
 
 
-$namespace_descriptor = $directories[$_GET['abs_path']]['namespace'];
+$namespace_descriptor = $directories[$abs_path]['namespace'];
 if($namespace_descriptor == 'root')
    $namespace_descriptor = '_ROOT_';
 else {

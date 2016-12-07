@@ -35,7 +35,6 @@ class admin_plugin_htmlOKay extends DokuWiki_Admin_Plugin
     var $user_entries = 0;
     var $show_debug = false;
 
-  //  function admin_plugin_htmlOKay()
      function __construct()
     {
         global $conf;

@@ -58,11 +58,67 @@
     function getNSdata_htmlOKay(f) {
         var index = f['abs_path'].selectedIndex;
         var ns = f['abs_path'].options[index].value;       
-        update_avail_htmlOKay("abs_path=" + ns);
+        update_avail_htmlOKay(ns);
         document.getElementById('current_ns').innerHTML = f['abs_path'].options[index].text;
     }
 
+        var scroll_visible_htmlOKay = false;
+
+    function  handleHttpResponse_htmlOKay(data) {
+
+
+            var f = window.document['nsdata'];
+            reset_htmlOKay(f);
+            var s = f['filespecs[]'];
+            s.options.length = 0;
+            var data = data.split("%%");
+            var opts = data[0];
+            var access = data[1];
+
+           var access_array =  get_access_array_htmlOKay(access);
+
+            var selected_files = get_selected_files_htmlOKay(access_array['filespecs']);
+            var opt_array = opts.split("|");
+            var selected_default;
+            for(var i=0; i<opt_array.length-1; i++) {
+                var ar = opt_array[i].split(":");
+                var selected = false;
+                if(ar.length == 3 && !selected_default) selected_default = i;
+                if(selected_files[ar[1]]) {
+                        selected = true;
+                        selected_default = -1;
+                }
+
+                var o = new Option(ar[0],ar[1]);
+                s.options[i] = o;
+                s.options[i].selected = selected;
+            }
+          if(selected_default &&  selected_default > -1) {
+                    s.options[i].selected = true;
+          }
  
+            update_groups_htmlOKay(f, access_array['group'] )
+            update_users_htmlOKay(f, access_array['user'] )
+  
+    }
+ 
+    function update_avail_htmlOKay(qstr) {
+        var url = JSINFO['url'];
+        
+        url = url +"?path=" + JSINFO['path']  + '&';	
+        qstr = 'abs_path=' + encodeURIComponent(qstr);       
+         url = url + qstr;
+          
+             jQuery.post(
+                url,
+                "",
+                function (data) {                
+                  handleHttpResponse_htmlOKay(data);
+                },
+                'html'
+            );
+
+     }
 
     function user_table_size_htmlOKay(entries) {
           var dom = document.getElementById('htmlOK_user_table');
@@ -75,7 +131,7 @@
 
           scrollbars_htmlOKay();
     }
-    var scroll_visible_htmlOKay = false;
+
     function scrollbars_htmlOKay() {
           var dom = document.getElementById('htmlOK_user_table');
           var scrollbut = document.getElementById('htmlOK_scrollbutton');
@@ -128,89 +184,6 @@
            }
 
         }
-
-
     }
-    
-   function getHTTPObject_htmlOKay() {
-      var xmlhttp;
-       
-      @cc_on
-      @if (@_jscript_version >= 5)
-        try {
-          xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-          try {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (E) {
-            xmlhttp = false;
-          }
-        }
-      @else
-      xmlhttp = false;
-      @end @
-      if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
-        try {
-          xmlhttp = new XMLHttpRequest();
-        } catch (e) {
-          xmlhttp = false;
-        }
-      }
-      return xmlhttp;
-    }
-    function update_avail_htmlOKay(qstr) {     
-        var url = JSINFO['url'];
-          alert('url='+url);
-        var path = JSINFO['path'];
-        url +="?path=" +path +"&";	 
-        alert(url)
-        qstr = qstr.replace(/\&amp;/g,"&");
-        httpXMLobj_htmlOKay.open("GET", url + qstr, true);
-        httpXMLobj_htmlOKay.onreadystatechange = handleHttpResponse_htmlOKay;
-        httpXMLobj_htmlOKay.send(null);
-     }
-
-        function handleHttpResponse_htmlOKay() {
-
-      if (httpXMLobj_htmlOKay.readyState == 4 && httpXMLobj_htmlOKay.status==200) {
-        if (httpXMLobj_htmlOKay.responseText.indexOf('invalid') == -1) {
-            var f = window.document['nsdata'];
-            reset_htmlOKay(f);
-            var s = f['filespecs[]'];
-            s.options.length = 0;
-
-            var data = httpXMLobj_htmlOKay.responseText.split("%%");
-            var opts = data[0];
-            var access = data[1];
-
-           var access_array =  get_access_array_htmlOKay(access);
-
-            var selected_files = get_selected_files_htmlOKay(access_array['filespecs']);
-            var opt_array = opts.split("|");
-            var selected_default;
-            for(var i=0; i<opt_array.length-1; i++) {
-                var ar = opt_array[i].split(":");
-                var selected = false;
-                if(ar.length == 3 && !selected_default) selected_default = i;
-                if(selected_files[ar[1]]) {
-                        selected = true;
-                        selected_default = -1;
-                }
-
-                var o = new Option(ar[0],ar[1]);
-                s.options[i] = o;
-                s.options[i].selected = selected;
-            }
-          if(selected_default &&  selected_default > -1) {
-                    s.options[i].selected = true;
-          }
-
-            update_groups_htmlOKay(f, access_array['group'] )
-            update_users_htmlOKay(f, access_array['user'] )
-        }
-
-      }   // readyState == 4
-    }
-  var httpXMLobj_htmlOKay = getHTTPObject_htmlOKay(); // We create the HTTP Object
    
    
