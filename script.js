@@ -134,7 +134,8 @@
     
    function getHTTPObject_htmlOKay() {
       var xmlhttp;
-      /*@cc_on
+       
+      @cc_on
       @if (@_jscript_version >= 5)
         try {
           xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
@@ -147,7 +148,7 @@
         }
       @else
       xmlhttp = false;
-      @end @*/
+      @end @
       if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
         try {
           xmlhttp = new XMLHttpRequest();
@@ -159,8 +160,10 @@
     }
     function update_avail_htmlOKay(qstr) {     
         var url = JSINFO['url'];
+          alert('url='+url);
         var path = JSINFO['path'];
         url +="?path=" +path +"&";	 
+        alert(url)
         qstr = qstr.replace(/\&amp;/g,"&");
         httpXMLobj_htmlOKay.open("GET", url + qstr, true);
         httpXMLobj_htmlOKay.onreadystatechange = handleHttpResponse_htmlOKay;
