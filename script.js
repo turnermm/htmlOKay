@@ -12,6 +12,7 @@
            var vals = group_array[i].split(":");        // split group identifier from policy
            var name = "group[" + vals[0] + "]";        // create a complete name for element, .eg. 'group[admin]'
            var node_list = f[name];                      
+           if (typeof(node_list) == "undefined") { continue;}    
 
            for(var j=0; j< node_list.length; j++) {   //loop through the chekboxes
                  if(node_list[j].value == vals[1]) {  // check off the box which matches saved value
