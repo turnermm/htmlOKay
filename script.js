@@ -65,7 +65,7 @@
         var scroll_visible_htmlOKay = false;
 
     function  handleHttpResponse_htmlOKay(data) {
-
+            
 
             var f = window.document['nsdata'];
             reset_htmlOKay(f);
@@ -96,13 +96,13 @@
           if(selected_default &&  selected_default > -1) {
                     s.options[i].selected = true;
           }
- 
+
             update_groups_htmlOKay(f, access_array['group'] )
             update_users_htmlOKay(f, access_array['user'] )
   
     }
- 
-    function update_avail_htmlOKay(qstr) {
+
+    function update_avail_htmlOKay(qstr) {      
         var url = DOKU_BASE + '/lib/plugins/htmlOKay/directory_scan-3.php';        
         url = url +"?path=" + JSINFO['path']  + '&';	
         qstr = 'abs_path=' + encodeURIComponent(qstr);       
@@ -118,7 +118,28 @@
             );
 
      }
+ 
+ 
+ /*  function update_avail_htmlOKay(qstr) {      
+        var url = DOKU_BASE + 'lib/exe/ajax.php';        
+        url = url +"?path=" + JSINFO['path']  + '&';	
+        qstr = 'abs_path=' + encodeURIComponent(qstr);       
+      
+         var params =  'call=htmlokay&path=' + encodeURIComponent(JSINFO['path']);
+          params += '&abs_path='+encodeURIComponent(qstr);
 
+            jQuery.post(
+                DOKU_BASE + 'lib/exe/ajax.php',
+                params,
+                function (data) {
+                     alert(data);
+                     handleHttpResponse_htmlOKay(data) ;
+                       
+                },
+                'html'
+            );
+     }
+ */
     function user_table_size_htmlOKay(entries) {
           var dom = document.getElementById('htmlOK_user_table');
           entries += 2;  // allow for table headers
@@ -184,5 +205,5 @@
 
         }
     }
-   
-   
+
+  

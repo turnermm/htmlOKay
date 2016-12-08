@@ -1,23 +1,19 @@
 <?php
-
-define('ACCESS_DIR',realpath(dirname(__FILE__).'/').'/conf/access/');
-$directories = array();
-$path = rawurldecode($_REQUEST['path']);
-
-$abs_path = rawurldecode($_REQUEST['abs_path']);
-
-
-//file_put_contents('raw.txt', $path . "\n" . $abs_path);
-
-$wiki_home = $path;
+global $wiki_home,$htmlokay_directories,$htmlokay_abs_path,$htmlokay_path;
+if (!defined('ACCESS_DIR')) define('ACCESS_DIR',realpath(dirname(__FILE__).'/').'/conf/access/');
 
 function init() {
-  global $wiki_home;
-  global $directories;
+  global $wiki_home, $htmlokay_path,$htmlokay_abs_path;
+  global $htmlokay_directories;
+
+    $htmlokay_directories = array();
+    $htmlokay_path = rawurldecode($_REQUEST['path']);
+    $htmlokay_abs_path = rawurldecode($_REQUEST['abs_path']);
+    $wiki_home = $htmlokay_path;
 
     $wiki_home = rtrim($wiki_home, '/');
-    $directories[$wiki_home]['name'] = 'root';
-    $directories[$wiki_home]['namespace'] = 'root';
+    $htmlokay_directories[$wiki_home]['name'] = 'root';
+    $htmlokay_directories[$wiki_home]['namespace'] = 'root';
     $wiki_home = ltrim($wiki_home, '/');
     $wiki_home = preg_quote($wiki_home, '/');
 }
@@ -43,7 +39,6 @@ function traverseDirTree($base,$fileFunc,$dirFunc=null,$afterDirFunc=null){
 
 function get_namespace($path) {
   global $wiki_home;
-
      $namespace_string =  trim($path, '/');
      $namespace_string = preg_replace('/^' . $wiki_home . '/', "", $namespace_string); 
      $namespace_string = preg_replace('%/%',':',$namespace_string);
@@ -52,48 +47,45 @@ function get_namespace($path) {
 }
 
 function outputPath($path){
-  global $directories;
+  global $htmlokay_directories;
 
   $name = basename($path);
   if($name == '.' || $name == '..') return;
  
   if(is_dir($path)){
-     $directories[$path] = array();     
-     $directories[$path]['name'] = $name;
-     $directories[$path]['namespace'] = get_namespace($path);
-     $directories[$path]['files'] = array();
+     $htmlokay_directories[$path] = array();     
+     $htmlokay_directories[$path]['name'] = $name;
+     $htmlokay_directories[$path]['namespace'] = get_namespace($path);
+     $htmlokay_directories[$path]['files'] = array();
   }
   elseif(is_file($path)){
      $dir = dirname($path); 
-     $directories[$dir]['files'][] = $name;
+     $htmlokay_directories[$dir]['files'][] = $name;
   }
-
-
 }
 
 
 function get_file_options($dir) {
- global $directories;
+ global $htmlokay_directories;
 
- $options = array();
+     $options = array();
+      $files = $htmlokay_directories[$dir]['files'];
 
-  $files = $directories[$dir]['files'];
-
-// currently these two options are the same -- may change in future
-  if(count($files) == 0) {
-       $options[] =  'No files found:none:selected';
-         $options[] = 'ALL:all' ;
-  }
-  else {
-         $options[] ='No Files Selected:none:selected';
-         $options[] = 'ALL:all' ;
-  }
-   foreach($files as $file) {   
-   $options[] = "$file:$file";
-   }
+    // currently these two options are the same -- may change in future
+      if(count($files) == 0) {
+           $options[] =  'No files found:none:selected';
+             $options[] = 'ALL:all' ;
+      }
+      else {
+             $options[] ='No Files Selected:none:selected';
+             $options[] = 'ALL:all' ;
+      }
+       foreach($files as $file) {   
+       $options[] = "$file:$file";
+       }
 
 
- return $options;
+    return $options;
 }
 
   /**
@@ -105,14 +97,11 @@ function get_file_options($dir) {
     */
     function get_access_file($access_dir, $namespace)
     {  
-        global $path;
+        global $htmlokay_path;
         $access_dir = rtrim($access_dir, '/');
-        $file = $access_dir . '/' . $namespace;
-
-       // echo  "\n\nOriginal access file: $file\n";
+        $file = $access_dir . '/' . $namespace;       
         if (file_exists($file))
-        {
-        //    echo "Tried Original access file: $file\n";
+        {        
             return $file;
         }
 
@@ -121,78 +110,62 @@ function get_file_options($dir) {
         {
             array_pop($dirs);
             $new_dir = implode('#', $dirs);
-            $file = $access_dir . '/' . $new_dir;
-          //  echo "Tried access file: $file\n";
-            if (file_exists($file) && is_file($file))   //  && is_dir($path . $new_dir)
-            {
-              //  echo "File exists: $file\n";
+            $file = $access_dir . '/' . $new_dir;         
+            if (file_exists($file) && is_file($file))  
+            {         
                 return $file;
             }
         }
         return $access_dir . '/' . $namespace;
     }
 
-
-
-
-init();
-
-traverseDirTree($path,'outputpath','outputpath');
-
-
-$options = get_file_options($abs_path);
-
-
-foreach($options as $option) { 
-   echo "$option|";
-}
-
-
-$namespace_descriptor = $directories[$abs_path]['namespace'];
-if($namespace_descriptor == 'root')
-   $namespace_descriptor = '_ROOT_';
-else {
- $namespace_descriptor = preg_replace('/\:/','#', $namespace_descriptor);
-}
-
-
-$data = array();
-$access_file =   get_access_file(ACCESS_DIR, $namespace_descriptor);  
-if(file_exists($access_file)) {
- $str = file_get_contents ($access_file);
- $data = unserialize($str);
-  
-}
-
-// $str = file_get_contents (ACCESS_DIR . $namespace_descriptor);
-//$data = unserialize($str);
-
-
-$output=""; 
-foreach($data as $name=>$val) {
-
-  if(is_array($val)) { 
-
-   $output.= "$name=>("; 
-   foreach($val as $key=>$item) {
-       if(is_string($key)) {
-             $key = $key . ':';
-       }
-       else $key = "";
-       $output .= "{$key}$item,";
-   }
-   $output = rtrim($output, ',');
-   $output .= ');;'; 
+ function access_process() {  
+     global $wiki_home,$htmlokay_directories,$htmlokay_abs_path,$htmlokay_path;
+     init();
+     traverseDirTree($htmlokay_path,'outputpath','outputpath');
+    $options = get_file_options($htmlokay_abs_path);
+    foreach($options as $option) { 
+       echo "$option|";
+    }
   }
- 
+
+function access_data() {
+    global $wiki_home,$htmlokay_directories,$htmlokay_abs_path,$htmlokay_path;  
+    $namespace_descriptor = $htmlokay_directories[$htmlokay_abs_path]['namespace'];
+    if($namespace_descriptor == 'root')
+       $namespace_descriptor = '_ROOT_';
+    else {
+     $namespace_descriptor = preg_replace('/\:/','#', $namespace_descriptor);
+    }
+    $data = array();
+    $access_file =   get_access_file(ACCESS_DIR, $namespace_descriptor);  
+    if(file_exists($access_file)) {
+     $str = file_get_contents ($access_file);
+     $data = unserialize($str);      
+    }
     
- 
-}
-  $output =rtrim($output, ';');
-  echo '%%' .$output;
+    $output=""; 
+    foreach($data as $name=>$val) {
+        if(is_array($val)) { 
+           $output.= "$name=>("; 
+           foreach($val as $key=>$item) {
+               if(is_string($key)) {
+                     $key = $key . ':';
+               }
+               else $key = "";
+               $output .= "{$key}$item,";
+           }
+           $output = rtrim($output, ',');
+           $output .= ');;'; 
+         } 
+    }
+   $output =rtrim($output, ';');
+   echo '%%' .$output;
+ } 
+
+  access_process();
+  access_data() ;
   flush();
-exit;
-echo '</SELECT>';
 
 ?>
 

@@ -7,8 +7,7 @@ require_once(DOKU_PLUGIN . 'action.php');
 if (!defined('HTMLOK_ACCESS_DIR')) define('HTMLOK_ACCESS_DIR', realpath(dirname(__FILE__)) . '/conf/access');
 define ('CONFIG_FILE', DOKU_INC . 'conf/local.php');
 require_once(DOKU_INC . 'inc/cache.php');
-// ini_set('error_reporting', E_ALL);
-// ini_set('display_errors', "on");
+
 class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
 {
     var $saved_inf;
@@ -315,5 +314,4 @@ DBG_JS;
      fclose($handle);
   }
 }
-
 ?>
