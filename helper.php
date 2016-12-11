@@ -326,9 +326,12 @@ class helper_plugin_htmlOKay extends DokuWiki_Plugin {
 
         if (is_string($info)) 
             {
+             if(array_key_exists ( $info , $levels)) {
               $this->access_level = $levels[$htmlok[$info]];
                 return $levels[$htmlok[$info]];
         }
+        }
+        if(!is_array($info)) return 0;
         $level = 0;
         foreach($info as $name)
         {

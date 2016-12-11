@@ -163,7 +163,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
       
         if (!isset($msg) || empty($msg)) return "";     
         $msgs_inx++;         
-        ptln('htmlOK_ERRORS_HEADER[' . $msgs_inx . ']="' . $msg . '"');
+        ptln('htmlOK_ERRORS_HEADER[' . $msgs_inx . ']="' . $msg . '";'); 
     } 
     
     function  errors_top(&$event,$params) {    
@@ -175,6 +175,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
          
          $this->setup_debug ($event,$params);
          ptln( '<script language="javascript">' );
+         ptln(' //<![CDATA[');
          ptln('var htmlOK_ERRORS_HEADER = new Array();');     
   
         $this->JS_ErrString .= $this->get_JSErrString("<b>---End User Info---</b>");
@@ -198,6 +199,7 @@ class action_plugin_htmlOKay extends DokuWiki_Action_Plugin
         {
             $this->access_level = $INFO['htmlOK_displayOnly'];          
         }
+          ptln('//]]>');
           ptln( '</script>');  
    }    
     function format_error_window()

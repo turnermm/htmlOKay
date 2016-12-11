@@ -567,7 +567,7 @@ class syntax_plugin_htmlOKay extends DokuWiki_Syntax_Plugin
         $msg = trim($msg);
         static $msgs_inx = -1;
       
-        if (!isset($msg) || empty($msg)) return "";
+        if (!isset($msg) || empty($msg)) return ";";
         $msgs_inx++;     
         $msg = '<script language="javascript">htmlOK_ERRORS_ARRAY[' . $msgs_inx . ']="' . $msg . '"; </script>' . "\n";
         return $msg;
