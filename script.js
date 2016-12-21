@@ -98,8 +98,8 @@
                     s.options[i].selected = true;
           }
 
-            update_groups_htmlOKay(f, access_array['group'] )
-            update_users_htmlOKay(f, access_array['user'] )
+            update_groups_htmlOKay(f, access_array['group'] );
+            update_users_htmlOKay(f, access_array['user'] );
   
     }
 
