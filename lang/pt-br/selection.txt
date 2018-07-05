@@ -1,0 +1,8 @@
+Use esta página para definir políticas de acesso a HTML para usuários e grupos.
+Usuários e grupos que não têm privilégios concedidos não podem usar HTML em suas páginas.
+** H **, ** M **, ** L ** e ** U ** referem-se ao número e ao grau de restrições impostas aos usuários de HTML.
+** H ** é o maior número, ** M ** um intervalo médio, ** L ** um conjunto de restrições Baixo ou Lax. ** U ** é irrestrito.
+Por segurança, defina as políticas de restrição o mais alto possível.
+O diretório '' htmlOKay / conf / access '' deve ser gravável pelo Dokuwiki.
+
+** Nota: ** primeiro selecione o namespace; Em seguida, destaque suas seleções e clique em "Salvar".
