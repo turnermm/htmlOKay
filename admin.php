@@ -7,7 +7,10 @@
 
 if (!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__) . '/../../../') . '/');
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if(!defined('HTMLOK_WIKI_PATH'))define ('HTMLOK_WIKI_PATH', DOKU_INC . 'data/pages/');
+if(!defined('HTMLOK_WIKI_PATH')) {
+    global $conf;
+    define ('HTMLOK_WIKI_PATH', $conf["datadir"] . "/");
+}
 if(!defined('DOKU_CONF')) define('DOKU_CONF',DOKU_INC.'conf/');
 define('AUTH_USERFILE', DOKU_CONF . 'users.auth.php');
 require_once(DOKU_PLUGIN . 'admin.php');

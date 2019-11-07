@@ -2,7 +2,10 @@
 if (!defined('DOKU_INC')) die();
 
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if(!defined('HTMLOK_WIKI_PATH'))define ('HTMLOK_WIKI_PATH', DOKU_INC . 'data/pages/');
+if(!defined('HTMLOK_WIKI_PATH')) {
+    global $conf;
+    define ('HTMLOK_WIKI_PATH', $conf["datadir"] . "/");
+}
 require_once(DOKU_PLUGIN . 'action.php');
 if (!defined('HTMLOK_ACCESS_DIR')) define('HTMLOK_ACCESS_DIR', realpath(dirname(__FILE__)) . '/conf/access');
 define ('CONFIG_FILE', DOKU_INC . 'conf/local.php');
